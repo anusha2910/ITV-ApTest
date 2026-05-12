@@ -3,22 +3,22 @@ import csv
 import io
 from datetime import datetime
 from functools import wraps
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-secret_key = os.environ.get('SESSION_SECRET')
-if not secret_key:
-   import os
-from flask import Flask
 
-app = Flask(__name__)
-
+# Secret key
 app.secret_key = os.environ.get("SESSION_SECRET", "mysecretkey123")
-app.config['SECRET_KEY'] = secret_key
+app.config['SECRET_KEY'] = app.secret_key
+
+# Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Upload folder
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 db = SQLAlchemy(app)
