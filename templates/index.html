@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Aptest - Start Your Test{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold" style="color: #83AF0A;">Welcome to I.T.Vedant</h1>
+            <p class="lead text-muted">Test your knowledge with our comprehensive MCQ platform</p>
+        </div>
+
+        <div class="card shadow-lg border-0">
+            <div class="card-header text-white py-3" style="background-color: #83AF0A;">
+                <h4 class="mb-0"><i class="bi bi-play-circle me-2"></i>Start a New Test</h4>
+            </div>
+            <div class="card-body p-4">
+                {% if subjects %}
+                <form action="{{ url_for('start_test') }}" method="POST" id="testForm">
+                    <div class="mb-4">
+                        <label for="subject" class="form-label fw-semibold">Select Subject</label>
+                        <select class="form-select form-select-lg" id="subject" name="subject" required>
+                            <option value="">Choose a subject...</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject }}">{{ subject }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- <div class="mb-4">
+                        <label for="difficulty" class="form-label fw-semibold">Select Difficulty</label>
+                        <select class="form-select form-select-lg" id="difficulty" name="difficulty">
+                            <option value="All">All Levels</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div> -->
+
+                    <!-- <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="num_questions" class="form-label fw-semibold">Number of Questions</label>
+                            <select class="form-select form-select-lg" id="num_questions" name="num_questions">
+                                <option value="5">5 Questions</option>
+                                <option value="10" selected>10 Questions</option>
+                                <option value="15">15 Questions</option>
+                                <option value="20">20 Questions</option>
+                                <option value="25">25 Questions</option>
+                            </select>
+                            <small class="text-muted" id="availableCount"></small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="time_limit" class="form-label fw-semibold">Time Limit</label>
+                            <select class="form-select form-select-lg" id="time_limit" name="time_limit">
+                                <option value="5">5 Minutes</option>
+                                <option value="10" selected>10 Minutes</option>
+                                <option value="15">15 Minutes</option>
+                                <option value="20">20 Minutes</option>
+                                <option value="30">30 Minutes</option>
+                            </select>
+                        </div>
+                    </div> -->
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-lg" style="background-color: #83AF0A;">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Start Test
+                        </button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted"></i>
+                    <h4 class="mt-3">No Questions Available</h4>
+                    <p class="text-muted">Please contact the administrator to add questions.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-book display-4 text-primary"></i>
+                        <h5 class="mt-3">Multiple Subjects</h5>
+                        <p class="text-muted">Choose from Aptitude, Logical Reasoning, English Grammar, and more</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock display-4 text-success"></i>
+                        <h5 class="mt-3">Timed Tests</h5>
+                        <p class="text-muted">Challenge yourself with time-bound assessments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up display-4 text-info"></i>
+                        <h5 class="mt-3">Instant Results</h5>
+                        <p class="text-muted">Get detailed score analysis and answer review</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('subject').addEventListener('change', function() {
+    const subject = this.value;
+    if (subject) {
+        fetch('/api/questions/' + encodeURIComponent(subject))
+            .then(response => response.json())
+            .then(data => {
+                const difficulty = document.getElementById('difficulty').value;
+                const count = difficulty === 'All' ? data['All'] : data[difficulty] || 0;
+                document.getElementById('availableCount').textContent = 'Available: ' + count + ' questions';
+            });
+    } else {
+        document.getElementById('availableCount').textContent = '';
+    }
+});
+
+document.getElementById('difficulty').addEventListener('change', function() {
+    document.getElementById('subject').dispatchEvent(new Event('change'));
+});
+</script>
+{% endblock %}

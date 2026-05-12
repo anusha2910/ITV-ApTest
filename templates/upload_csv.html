@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Aptest - Upload CSV{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-upload me-2"></i>Bulk Upload Questions</h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-info">
+                    <h6><i class="bi bi-info-circle me-1"></i>CSV Format Instructions</h6>
+                    <p class="mb-2">Your CSV file should have the following columns:</p>
+                    <code>question_text, option_a, option_b, option_c, option_d, correct_answer, subject, difficulty</code>
+                    <hr>
+                    <p class="mb-0"><strong>Example row:</strong><br>
+                    <small>"What is 2+2?", "3", "4", "5", "6", "B", "Aptitude", "Easy"</small></p>
+                </div>
+
+                <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="csv_file" class="form-label fw-semibold">Select CSV File</label>
+                        <input type="file" class="form-control form-control-lg" id="csv_file" name="csv_file" accept=".csv" required>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-cloud-upload me-1"></i>Upload Questions
+                        </button>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <h6>Download Sample CSV Template</h6>
+                <a href="{{ url_for('static', filename='sample_questions.csv') }}" class="btn btn-outline-success" download>
+                    <i class="bi bi-download me-1"></i>Download Template
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

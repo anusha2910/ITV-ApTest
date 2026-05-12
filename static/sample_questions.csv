@@ -1,0 +1,6 @@
+question_text,option_a,option_b,option_c,option_d,correct_answer,subject,difficulty
+"What is the value of 15% of 200?",25,30,35,40,B,Aptitude,Easy
+"If a car travels 120 km in 2 hours, what is its speed?",50 km/h,60 km/h,70 km/h,80 km/h,B,Aptitude,Easy
+"Find the next number in the series: 2, 6, 12, 20, ?",28,30,32,36,B,Logical Reasoning,Medium
+"Choose the correct spelling:",Accomodate,Accommodate,Acommodate,Acomodate,B,English Grammar,Easy
+"What is the capital of France?",London,Berlin,Paris,Madrid,C,General Knowledge,Easy

@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Aptest - Question {{ question_num }} of {{ total_questions }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg border-0">
+            <div class="card-header text-white py-3" style="background-color: #83AF0A;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-question-circle me-2"></i>
+                        Question {{ question_num }} of {{ total_questions }}
+                    </h5>
+                    <div class="timer-display" id="timer">
+                        <i class="bi bi-clock me-1"></i>
+                        <span id="timerText">--:--</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="progress mb-4" style="height: 8px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ (question_num / total_questions * 100)|int }}%"></div>
+                </div>
+
+                <div class="question-text mb-4">
+                    <h4>{{ question.question_text }}</h4>
+                </div>
+
+                <form id="answerForm" action="{{ url_for('take_test', question_num=question_num) }}" method="POST">
+                    <div class="options-container">
+                        <div class="option-item mb-3">
+                            <input type="radio" class="btn-check" name="answer" id="optionA" value="A" {% if current_answer == 'A' %}checked{% endif %}>
+                            <label class="btn btn-outline-primary w-100 text-start py-3 px-4" for="optionA">
+                                <strong class="me-2">A.</strong> {{ question.option_a }}
+                            </label>
+                        </div>
+                        <div class="option-item mb-3">
+                            <input type="radio" class="btn-check" name="answer" id="optionB" value="B" {% if current_answer == 'B' %}checked{% endif %}>
+                            <label class="btn btn-outline-primary w-100 text-start py-3 px-4" for="optionB">
+                                <strong class="me-2">B.</strong> {{ question.option_b }}
+                            </label>
+                        </div>
+                        <div class="option-item mb-3">
+                            <input type="radio" class="btn-check" name="answer" id="optionC" value="C" {% if current_answer == 'C' %}checked{% endif %}>
+                            <label class="btn btn-outline-primary w-100 text-start py-3 px-4" for="optionC">
+                                <strong class="me-2">C.</strong> {{ question.option_c }}
+                            </label>
+                        </div>
+                        <div class="option-item mb-3">
+                            <input type="radio" class="btn-check" name="answer" id="optionD" value="D" {% if current_answer == 'D' %}checked{% endif %}>
+                            <label class="btn btn-outline-primary w-100 text-start py-3 px-4" for="optionD">
+                                <strong class="me-2">D.</strong> {{ question.option_d }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if question_num > 1 %}
+                            <a href="{{ url_for('take_test', question_num=question_num - 1) }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Previous
+                            </a>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex gap-2">
+                            {% if question_num < total_questions %}
+                            <button type="submit" class="btn btn-primary" formaction="{{ url_for('take_test', question_num=question_num + 1) }}">
+                                Next<i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                            {% endif %}
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#submitModal">
+                                <i class="bi bi-check-circle me-1"></i>Submit Test
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-3 shadow-sm">
+            <div class="card-body py-2">
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                    {% for i in range(1, total_questions + 1) %}
+                    <a href="{{ url_for('take_test', question_num=i) }}" 
+                       class="btn btn-sm {% if i == question_num %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+                       style="width: 40px;">{{ i }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="submitModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Test</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to submit your test?</p>
+                <p class="text-muted">You won't be able to change your answers after submission.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Test</button>
+                <form action="{{ url_for('submit_test') }}" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-success">Submit Test</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const questionId = {{ question.id }};
+let remainingTime = {{ remaining_time }};
+
+function updateTimer() {
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    document.getElementById('timerText').textContent = 
+        String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    
+    if (remainingTime <= 60) {
+        document.getElementById('timer').classList.add('text-danger');
+    }
+    
+    if (remainingTime <= 0) {
+        document.querySelector('form[action="{{ url_for("submit_test") }}"]').submit();
+    }
+    
+    remainingTime--;
+}
+
+updateTimer();
+setInterval(updateTimer, 1000);
+
+document.querySelectorAll('input[name="answer"]').forEach(input => {
+    input.addEventListener('change', function() {
+        fetch('/test/save-answer', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({question_id: questionId, answer: this.value})
+        });
+    });
+});
+</script>
+{% endblock %}

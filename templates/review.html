@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Aptest - Answer Review{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-journal-text me-2"></i>Answer Review</h2>
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="bi bi-arrow-repeat me-1"></i>Take Another Test
+            </a>
+        </div>
+
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <strong>Subject:</strong> {{ result.subject }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Score:</strong> {{ result.score }}%
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Correct:</strong> <span class="text-success">{{ result.correct }}</span> / {{ result.total }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Wrong:</strong> <span class="text-danger">{{ result.wrong }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% for item in result.review_data %}
+        <div class="card mb-3 shadow-sm {% if item.is_correct %}border-success{% elif item.user_answer %}border-danger{% else %}border-secondary{% endif %}">
+            <div class="card-header {% if item.is_correct %}bg-success text-white{% elif item.user_answer %}bg-danger text-white{% else %}bg-secondary text-white{% endif %}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><strong>Question {{ loop.index }}</strong></span>
+                    {% if item.is_correct %}
+                    <span class="badge bg-white text-success">Correct</span>
+                    {% elif item.user_answer %}
+                    <span class="badge bg-white text-danger">Wrong</span>
+                    {% else %}
+                    <span class="badge bg-white text-secondary">Not Answered</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="mb-4">{{ item.question_text }}</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="option-review mb-2 p-2 rounded {% if item.correct_answer == 'A' %}bg-success text-white{% elif item.user_answer == 'A' and not item.is_correct %}bg-danger text-white{% else %}bg-light{% endif %}">
+                            <strong>A.</strong> {{ item.option_a }}
+                            {% if item.correct_answer == 'A' %}<i class="bi bi-check-circle-fill float-end"></i>{% endif %}
+                            {% if item.user_answer == 'A' and not item.is_correct %}<i class="bi bi-x-circle-fill float-end"></i>{% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-review mb-2 p-2 rounded {% if item.correct_answer == 'B' %}bg-success text-white{% elif item.user_answer == 'B' and not item.is_correct %}bg-danger text-white{% else %}bg-light{% endif %}">
+                            <strong>B.</strong> {{ item.option_b }}
+                            {% if item.correct_answer == 'B' %}<i class="bi bi-check-circle-fill float-end"></i>{% endif %}
+                            {% if item.user_answer == 'B' and not item.is_correct %}<i class="bi bi-x-circle-fill float-end"></i>{% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-review mb-2 p-2 rounded {% if item.correct_answer == 'C' %}bg-success text-white{% elif item.user_answer == 'C' and not item.is_correct %}bg-danger text-white{% else %}bg-light{% endif %}">
+                            <strong>C.</strong> {{ item.option_c }}
+                            {% if item.correct_answer == 'C' %}<i class="bi bi-check-circle-fill float-end"></i>{% endif %}
+                            {% if item.user_answer == 'C' and not item.is_correct %}<i class="bi bi-x-circle-fill float-end"></i>{% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-review mb-2 p-2 rounded {% if item.correct_answer == 'D' %}bg-success text-white{% elif item.user_answer == 'D' and not item.is_correct %}bg-danger text-white{% else %}bg-light{% endif %}">
+                            <strong>D.</strong> {{ item.option_d }}
+                            {% if item.correct_answer == 'D' %}<i class="bi bi-check-circle-fill float-end"></i>{% endif %}
+                            {% if item.user_answer == 'D' and not item.is_correct %}<i class="bi bi-x-circle-fill float-end"></i>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-muted">
+                    <small>
+                        <strong>Your Answer:</strong> {{ item.user_answer or 'Not answered' }} | 
+                        <strong>Correct Answer:</strong> {{ item.correct_answer }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('show_result') }}" class="btn btn-outline-primary me-2">
+                <i class="bi bi-arrow-left me-1"></i>Back to Results
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-success">
+                <i class="bi bi-arrow-repeat me-1"></i>Take Another Test
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

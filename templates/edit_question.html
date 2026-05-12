@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Aptest - Edit Question{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>Edit Question #{{ question.id }}</h4>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ url_for('edit_question', id=question.id) }}" method="POST">
+                    <div class="mb-4">
+                        <label for="question_text" class="form-label fw-semibold">Question Text</label>
+                        <textarea class="form-control" id="question_text" name="question_text" rows="3" required>{{ question.question_text }}</textarea>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="option_a" class="form-label fw-semibold">Option A</label>
+                            <input type="text" class="form-control" id="option_a" name="option_a" value="{{ question.option_a }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="option_b" class="form-label fw-semibold">Option B</label>
+                            <input type="text" class="form-control" id="option_b" name="option_b" value="{{ question.option_b }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="option_c" class="form-label fw-semibold">Option C</label>
+                            <input type="text" class="form-control" id="option_c" name="option_c" value="{{ question.option_c }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="option_d" class="form-label fw-semibold">Option D</label>
+                            <input type="text" class="form-control" id="option_d" name="option_d" value="{{ question.option_d }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label for="correct_answer" class="form-label fw-semibold">Correct Answer</label>
+                            <select class="form-select" id="correct_answer" name="correct_answer" required>
+                                <option value="A" {% if question.correct_answer == 'A' %}selected{% endif %}>A</option>
+                                <option value="B" {% if question.correct_answer == 'B' %}selected{% endif %}>B</option>
+                                <option value="C" {% if question.correct_answer == 'C' %}selected{% endif %}>C</option>
+                                <option value="D" {% if question.correct_answer == 'D' %}selected{% endif %}>D</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="subject" class="form-label fw-semibold">Subject</label>
+                            <select class="form-select" id="subject" name="subject" required>
+                                <option value="Aptitude" {% if question.subject == 'Aptitude' %}selected{% endif %}>Aptitude</option>
+                                <option value="Logical Reasoning" {% if question.subject == 'Logical Reasoning' %}selected{% endif %}>Logical Reasoning</option>
+                                <option value="English Grammar" {% if question.subject == 'English Grammar' %}selected{% endif %}>English Grammar</option>
+                                <option value="General Knowledge" {% if question.subject == 'General Knowledge' %}selected{% endif %}>General Knowledge</option>
+                                <option value="Verbal Ability" {% if question.subject == 'Verbal Ability' %}selected{% endif %}>Verbal Ability</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="difficulty" class="form-label fw-semibold">Difficulty</label>
+                            <select class="form-select" id="difficulty" name="difficulty" required>
+                                <option value="Easy" {% if question.difficulty == 'Easy' %}selected{% endif %}>Easy</option>
+                                <option value="Medium" {% if question.difficulty == 'Medium' %}selected{% endif %}>Medium</option>
+                                <option value="Hard" {% if question.difficulty == 'Hard' %}selected{% endif %}>Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>Update Question
+                        </button>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

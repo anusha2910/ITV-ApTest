@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Aptest - Test Results{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-4">
+            {% if result.score >= 80 %}
+            <i class="bi bi-trophy-fill display-1 text-warning"></i>
+            <h2 class="mt-3 text-success">Excellent Performance!</h2>
+            {% elif result.score >= 60 %}
+            <i class="bi bi-emoji-smile-fill display-1 text-primary"></i>
+            <h2 class="mt-3 text-primary">Good Job!</h2>
+            {% elif result.score >= 40 %}
+            <i class="bi bi-emoji-neutral-fill display-1 text-warning"></i>
+            <h2 class="mt-3 text-warning">Keep Practicing!</h2>
+            {% else %}
+            <i class="bi bi-emoji-frown-fill display-1 text-danger"></i>
+            <h2 class="mt-3 text-danger">Need More Practice</h2>
+            {% endif %}
+        </div>
+
+        <div class="card shadow-lg border-0 mb-4">
+            <div class="card-header text-white py-3 text-center" style="background-color: #83AF0A;">
+                <h4 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>Test Results</h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="row text-center mb-4">
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-primary mb-0">{{ result.total }}</h3>
+                            <small class="text-muted">Total Questions</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-success mb-0">{{ result.correct }}</h3>
+                            <small class="text-muted">Correct</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-danger mb-0">{{ result.wrong }}</h3>
+                            <small class="text-muted">Wrong</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-secondary mb-0">{{ result.unanswered }}</h3>
+                            <small class="text-muted">Unanswered</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mb-4">
+                    <div class="display-1 fw-bold {% if result.score >= 60 %}text-success{% elif result.score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+                        {{ result.score }}%
+                    </div>
+                    <p class="text-muted">Final Score</p>
+                </div>
+
+                <div class="progress mb-4" style="height: 30px;">
+                    <div class="progress-bar bg-success" style="width: {{ (result.correct / result.total * 100)|int }}%">
+                        {{ result.correct }} Correct
+                    </div>
+                    <div class="progress-bar bg-danger" style="width: {{ (result.wrong / result.total * 100)|int }}%">
+                        {{ result.wrong }} Wrong
+                    </div>
+                    <div class="progress-bar bg-secondary" style="width: {{ (result.unanswered / result.total * 100)|int }}%">
+                        {{ result.unanswered }} Skipped
+                    </div>
+                </div>
+
+                <div class="row text-center">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Subject:</strong> {{ result.subject }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Difficulty:</strong> {{ result.difficulty or 'All Levels' }}</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="mb-0"><strong>Time Taken:</strong> {{ (result.time_taken // 60) }} min {{ result.time_taken % 60 }} sec</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('review_answers') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-eye me-2"></i>Review Answers
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-success btn-lg">
+                <i class="bi bi-arrow-repeat me-2"></i>Take Another Test
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
